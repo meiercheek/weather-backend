@@ -1,4 +1,5 @@
 const Pool = require('pg').Pool
+const tools = require('./api/tools')
 
 const pool = new Pool({
   user: process.env.USER,
@@ -8,17 +9,28 @@ const pool = new Pool({
   port: process.env.PORT,
 })
 
-
 //TODO: db operations
 
 const getGeoReports = (request, response) => {
-  const { radius, latitude, longitude } = request.body
-  pool.query('TODO', (error, results) => {
-    if (error) {
-      throw error
-    }
-    response.status(200).json(results.rows)
-  })
+  // react-native-maps: getMapBoundaries -> {northEast: LatLng, southWest: LatLng}
+  
+  const { NElat, NElong, NWlat, NWlong,
+     SElat, SElong, SWlat, SWlong, error } = tools.checkandcalccoords(request)
+  
+  if (error){
+    response.status(400).json(error)
+  }
+
+  if (_radius != null && _latitude != null && _longitude != null) {
+    pool.query('TODO', [], (error, results) => {
+      if (error) {
+        response.status(404).json(error)
+      }
+      response.status(200).json(results.rows)
+    })
+  }
+
+
 }
 
 const getUserById = (request, response) => {
@@ -45,24 +57,25 @@ const createUser = (request, response) => {
 
 const createReport = (request, response) => {
   const { report_id, user_id, characteristic, coordinates,
-     location, uploadTime, description, photo} = request.body
+    location, uploadTime, description, photo } = request.body
 
   pool.query('TODO', [report_id, user_id, characteristic, coordinates,
     location, uploadTime, description, photo], (error, results) => {
-    if (error) {
-      throw error
-    }
-    response.status(201).send(`Report added with ID: ${results.insertId}`)
-  })
+      if (error) {
+        throw error
+      }
+      response.status(201).send(`Report added with ID: ${results.insertId}`)
+    })
 }
 
 const updateReport = (request, response) => {
   const id = parseInt(request.params.id)
-  const { name, email } = request.body
+  const { report_id, user_id, characteristic, coordinates,
+    location, uploadTime, description, photo } = request.body
 
   pool.query(
-    'UPDATE users SET name = $1, email = $2 WHERE id = $3',
-    [name, email, id],
+    'TODO', [report_id, user_id, characteristic, coordinates,
+    location, uploadTime, description, photo],
     (error, results) => {
       if (error) {
         throw error
@@ -96,10 +109,10 @@ const deleteReport = (request, response) => {
 
 module.exports = {
   getGeoReports,
-  getUserById,
+  /*getUserById,
   getReportById,
   createUser,
   createReport,
   updateReport,
-  deleteReport,
+  deleteReport,*/
 }
