@@ -1,5 +1,5 @@
 const Pool = require('pg').Pool
-const tools = require('./api/tools')
+const tools = require('./tools')
 
 const pool = new Pool({
   user: process.env.USER,
@@ -13,7 +13,6 @@ const pool = new Pool({
 
 const getGeoReports = (request, response) => {
   // react-native-maps: getMapBoundaries -> {northEast: LatLng, southWest: LatLng}
-  
   const { NElat, NElong, NWlat, NWlong,
      SElat, SElong, SWlat, SWlong, error } = tools.checkandcalccoords(request)
   
@@ -26,32 +25,30 @@ const getGeoReports = (request, response) => {
       if (error) {
         response.status(404).json(error)
       }
-      response.status(200).json(results.rows)
+      response.status(200).json(results)
     })
   }
-
-
 }
 
 const getUserById = (request, response) => {
-  const id = parseInt(request.params.id)
+  //const id = parseInt(request.params.id)
 
-  pool.query('SELECT * FROM users WHERE id = $1', [id], (error, results) => {
+  pool.query('SELECT * FROM users WHERE user_id = $1', [request.params.id], (error, results) => {
     if (error) {
-      throw error
+      response.status(404).json(error)
     }
     response.status(200).json(results.rows)
   })
 }
 
 const createUser = (request, response) => {
-  const { username, email, password, user_id } = request.body
+  const { username, email, password } = request.body
 
-  pool.query('INSERT INTO users (username, email, password, user_id) VALUES ($1, $2, $3, $4)', [username, email, password, user_id], (error, results) => {
+  pool.query('INSERT INTO users (username, email, password) VALUES ($1, $2, $3) RETURNING user_id', [username, email, password], (error, results) => {
     if (error) {
       throw error
     }
-    response.status(201).send(`User added with ID: ${results.insertId}`)
+    response.status(201).send(`User added with ID: ${results.rows[0].user_id}`)
   })
 }
 
@@ -62,9 +59,9 @@ const createReport = (request, response) => {
   pool.query('TODO', [report_id, user_id, characteristic, coordinates,
     location, uploadTime, description, photo], (error, results) => {
       if (error) {
-        throw error
+        response.status(409).json(error)
       }
-      response.status(201).send(`Report added with ID: ${results.insertId}`)
+      response.status(201).send(`Report added with ID: ${results}`)
     })
 }
 
@@ -74,11 +71,14 @@ const updateReport = (request, response) => {
     location, uploadTime, description, photo } = request.body
 
   pool.query(
-    'TODO', [report_id, user_id, characteristic, coordinates,
-    location, uploadTime, description, photo],
+    'UPDATE reports SET user_id = $1, characteristic = $2, coordinates = $3,\
+     description = $4, location = $5, uploadTime = $6, photo = $7 WHERE \
+     report_id = $8',
+      [user_id, characteristic, coordinates,
+      description, location, uploadTime, photo, report_id],
     (error, results) => {
       if (error) {
-        throw error
+        response.status(404).json(error)
       }
       response.status(200).send(`Report modified with ID: ${id}`)
     }
@@ -86,11 +86,10 @@ const updateReport = (request, response) => {
 }
 
 const getReportById = (request, response) => {
-  const id = parseInt(request.params.id)
 
-  pool.query('SELECT * FROM reports WHERE id = $1', [id], (error, results) => {
+  pool.query('SELECT * FROM reports WHERE report_id = $1', [request.params.id], (error, results) => {
     if (error) {
-      throw error
+      response.status(404).json(error)
     }
     response.status(200).json(results.rows)
   })
@@ -101,18 +100,18 @@ const deleteReport = (request, response) => {
 
   pool.query('DELETE FROM users WHERE id = $1', [id], (error, results) => {
     if (error) {
-      throw error
+      response.status(404).json(error)
     }
-    response.status(200).send(`Report deleted with ID: ${id}`)
+    response.status(204).send(`Report deleted with ID: ${id}`)
   })
 }
 
 module.exports = {
   getGeoReports,
-  /*getUserById,
+  getUserById,
   getReportById,
   createUser,
   createReport,
   updateReport,
-  deleteReport,*/
+  deleteReport,
 }
