@@ -11,6 +11,7 @@ app.use(
   })
 )
 
+
 app.get('/', (request, response) => {
     response.json({ info: 'Weather Report API v1.0' })
 })
@@ -19,7 +20,7 @@ app.listen(port, () => {
     console.log(`Weather App API is running on port ${port}.`)
 })
 
-/*
+
 app.post('/users', db.createUser)
 app.get('/users/:id', db.getUserById)
 
@@ -27,6 +28,6 @@ app.get('/users/:id', db.getUserById)
 app.post('/reports', db.createReport)
 app.put('/reports/:id', db.updateReport)
 app.get('/reports/:id', db.getReportById)
-app.delete('/reports/:id', db.deleteReport)*/
+app.delete('/reports/:id', db.deleteReport)
 
-app.get('/georeports', db.getReportById)
+app.get('/georeports', db.getGeoReports)
