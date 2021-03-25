@@ -4,13 +4,13 @@ const app = express()
 const port = 3000
 const db = require('./api/queries')
 
+
 app.use(express.json())
 app.use(
     express.urlencoded({
     extended: true,
   })
 )
-
 
 app.get('/', (request, response) => {
     response.json({ info: 'Weather Report API v1.0' })
