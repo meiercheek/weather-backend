@@ -22,12 +22,16 @@ app.listen(port, () => {
 
 
 app.post('/users', db.createUser)
-app.get('/users/:id', db.getUserById)
+app.get('/users/:id', (req, res) =>db.auth(req, res, db.getUserById))
 
 
-app.post('/reports', db.createReport)
-app.put('/reports/:id', db.updateReport)
-app.get('/reports/:id', db.getReportById)
-app.delete('/reports/:id', db.deleteReport)
+app.post('/reports', (req, res) => db.auth(req, res, db.createReport))
+app.put('/reports/:id', (req, res) => db.auth(req, res, db.updateReport))
+app.get('/reports/:user_id', (req, res) => db.auth(req, res, db.getReportByOwner))
+app.delete('/reports/:id', (req, res) => db.auth(req, res,db.deleteReport))
 
-app.get('/georeports', db.getGeoReports)
+app.get('/georeports',(req, res) => db.auth(req, res, db.getGeoReports))
+
+app.post('/login', db.loginUser)
+app.get('/logout',(req, res) => db.auth(req, res, db.logoutUser))
+app.post('/me',  db.getCurrentUserId)
