@@ -113,30 +113,7 @@ paths:
           description: "invalid ID input"
         "404":
           description: "report not found"
-    get:
-      tags:
-        - reports
-      summary: "searches report by ID"
-      description: "Returns a report by ID"
-      operationId: "getReportById"
-      parameters:
-      - name: "report_id"
-        in: "path"
-        description: "report ID to find"
-        required: true
-        schema:
-          type: "string"
-      responses:
-        "200":
-          description: "Report found"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Report"
-        "400":
-          description: "Invalid ID supplied"
-        "404":
-          description: "Report not found"
+    
     delete:
       tags:
         - reports
@@ -157,6 +134,32 @@ paths:
           description: "invalid ID input"
         "404":
           description: "report not found"
+  /reports/{user_id}:
+    get:
+        tags:
+          - reports
+        summary: "searches report by owner"
+        description: "Returns a report by owner"
+        operationId: "getReportByOwner"
+        parameters:
+        - name: "user_id"
+          in: "path"
+          description: "user ID to find his report"
+          required: true
+          schema:
+            type: "string"
+        responses:
+          "200":
+            description: "Report found"
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/Report"
+          "400":
+            description: "Invalid ID supplied"
+          "404":
+            description: "Report not found"
+  
   /users:
     post:
       tags:
@@ -190,7 +193,7 @@ paths:
         description: "user ID to find"
         required: true
         schema:
-          type: "string"
+          type: "integer"
       responses:
         "200":
           description: "User found"
@@ -202,8 +205,54 @@ paths:
           description: "Invalid ID supplied"
         "404":
           description: "User not found"
+  /login:
+    post:
+      tags:
+        - users
+      summary: "logs the user in"
+      operationId: "loginUser"
+      description: "logs the user in"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Login'
+        description: Username and password
+      responses:
+        '500':
+          description: "server error"
+        '201':
+          description: "user created"
+        '400':
+          description: "invalid input, object invalid"
+        '401':
+          description: "not authenticated"
+  /logout:
+    get:
+      tags:
+        - users
+      summary: "logs the user out"
+      operationId: "logoutUser"
+      description: "logs the user out"
+      responses:
+        '200':
+          description: "logged out"
+        '401':
+          description: "not authenticated"        
 components:
   schemas:
+    Login:
+      required: 
+        - password
+        - username
+      properties:
+        password:
+          type: "string"
+          format: "password"
+          example: "mrkvicka55"
+        username:
+          type: "string"
+          example: "JozkoM"
     User:
       required: 
         - user_id
@@ -223,7 +272,7 @@ components:
           type: "string"
           format: "password"
           example: "********"
-        nickname:
+        username:
           type: "string"
           example: "JozkoM"
     Report:
