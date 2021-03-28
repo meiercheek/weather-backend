@@ -32,7 +32,7 @@ const getGeoReports = (request, response) => {
     SElat, SElong, SWlat, SWlong, error } = tools.checkandcalccoords(request)
 
   if (error) {
-    response.status(400).json(error)
+    return response.status(400).json(error)
   }
 
   if (_radius != null && _latitude != null && _longitude != null) {
@@ -41,7 +41,7 @@ const getGeoReports = (request, response) => {
         response.status(500).json(error)
       }
       else {
-        if(!results.rows)
+        if (!results.rows)
           response.status(404).json('No reports found.')
 
         response.status(200).json(results.rows)
@@ -52,14 +52,14 @@ const getGeoReports = (request, response) => {
 }
 
 const createReport = (request, response) => {
-  if (!request.body.user_id || !request.body.characteristic || !request.body.coordinates||
-    !request.body.description|| !request.body.location|| !request.body.uploadTime||!request.body.photo) {
+  if (!request.body.user_id || !request.body.characteristic || !request.body.coordinates ||
+    !request.body.description || !request.body.location || !request.body.uploadTime || !request.body.photo) {
     return response.status(400).json('Invalid object received.')
   } // ak je nezadaný description alebo photo, príde "-"
 
   const { report_id, user_id, characteristic, coordinates,
     description, location, uploadTime, photo } = request.body
-    //query neakceptuje coordinates, pozrieť podľa db a zmeniť query
+  //query neakceptuje coordinates, pozrieť podľa db a zmeniť query
   pool.query('INSERT INTO reports (report_id, user_id,\
        characteristic, coordinates, description,\
         location, uploadTime, photo) VALUES\
@@ -117,37 +117,37 @@ const getReportByOwner = (request, response) => {
 }
 
 const deleteReport = (request, response) => {
- 
-    pool.query('DELETE FROM reports WHERE report_id = $1',
-      [request.params.id], (error, results) => {
-        if (error) {
-          response.status(500).json(error)
-        }
-        else {
-          response.status(204).send(`Report deleted.`)
-        }
-      })
+
+  pool.query('DELETE FROM reports WHERE report_id = $1',
+    [request.params.id], (error, results) => {
+      if (error) {
+        response.status(500).json(error)
+      }
+      else {
+        response.status(204).send(`Report deleted.`)
+      }
+    })
 
 
 }
 
 const getUserById = (request, response) => {
-    if (tools.checkuuid(request.params.id) == false) {
-      response.status(400).json('bad uuid format')
-    }
-    else {
-      pool.query('SELECT * FROM users WHERE user_id = $1', [request.params.id], (error, results) => {
-        if (error) {
-          return response.status(500).json(error)
+  if (tools.checkuuid(request.params.id) == false) {
+    response.status(400).json('bad uuid format')
+  }
+  else {
+    pool.query('SELECT * FROM users WHERE user_id = $1', [request.params.id], (error, results) => {
+      if (error) {
+        return response.status(500).json(error)
+      }
+      else {
+        if (!results.rows) {
+          return response.status(404).json('No user found.')
         }
-        else {
-          if (!results.rows) {
-            return response.status(404).json('No user found.')
-          }
-          return response.status(200).json(results.rows[0].username)
-        }
-      })
-    }
+        return response.status(200).json(results.rows[0].username)
+      }
+    })
+  }
 
 }
 

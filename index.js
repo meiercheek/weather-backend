@@ -24,6 +24,9 @@ app.listen(port, () => {
 app.post('/users', db.createUser)
 app.get('/users/:id', (req, res) =>db.auth(req, res, db.getUserById))
 
+app.post('/login', db.loginUser)
+app.get('/logout',(req, res) => db.auth(req, res, db.logoutUser))
+app.post('/me',  db.getCurrentUserId)
 
 app.post('/reports', (req, res) => db.auth(req, res, db.createReport))
 app.put('/reports/:id', (req, res) => db.auth(req, res, db.updateReport))
@@ -32,6 +35,3 @@ app.delete('/reports/:id', (req, res) => db.auth(req, res,db.deleteReport))
 
 app.get('/georeports',(req, res) => db.auth(req, res, db.getGeoReports))
 
-app.post('/login', db.loginUser)
-app.get('/logout',(req, res) => db.auth(req, res, db.logoutUser))
-app.post('/me',  db.getCurrentUserId)
