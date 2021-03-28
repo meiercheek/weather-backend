@@ -32,17 +32,16 @@ const getGeoReports = (request, response) => {
     SElat, SElong, SWlat, SWlong, error } = tools.checkandcalccoords(request)
 
   if (error) {
-    return response.status(400).json(error)
+    return response.status(400).json('Incorrect map data entered.')
   }
-
-  if (_radius != null && _latitude != null && _longitude != null) {
+  else {
     pool.query('TODO', [], (error, results) => {
       if (error) {
-        response.status(500).json(error)
+        return response.status(500).json(error)
       }
       else {
         if (!results.rows)
-          response.status(404).json('No reports found.')
+          return response.status(404).json('No reports found.')
 
         response.status(200).json(results.rows)
       }
