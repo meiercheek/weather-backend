@@ -238,7 +238,21 @@ paths:
         '200':
           description: "logged out"
         '401':
-          description: "not authenticated"        
+          description: "not authenticated"
+  /me:
+    get:
+      tags:
+        - users
+      summary: "gets current user's id"
+      operationId: "currentUser"
+      description: "gets current user's id"
+      responses:
+        '200':
+          description: "returning id"
+        '500':
+          description: "server error"
+        '401':
+          description: "not authenticated"
 components:
   schemas:
     Login:
