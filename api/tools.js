@@ -2,7 +2,7 @@ const isFloat = (n) => {
     return Number(n) === n && n % 1 !== 0;
 }
 
-const checkandcalccoords = (request) => {
+ const checkandcalccoords = (request) => {
     const NElat = request.params.NElat
     const NElong = request.params.NElong
     const SWlat = request.params.SWlat
@@ -71,7 +71,12 @@ const checkandcalccoords = (request) => {
 
 }
 
+ const checkuuid = (str) => {
+    const regex = new RegExp(/^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/,'i')
+    return regex.test(str)
+}
+
 module.exports = {
-    isFloat,
-    checkandcalccoords
+    checkandcalccoords,
+    checkuuid
 }
