@@ -259,15 +259,10 @@ components:
           example: "JozkoM"
     User:
       required: 
-        - user_id
         - email
         - password
         - nickname
       properties:
-        user_id:
-          type: "string"
-          format: "uuid"
-          example: "10cb7c12-34c1-47d3-adb6-a41ab448ea28"
         email:
           type: "string"
           format: "email"
@@ -281,7 +276,6 @@ components:
           example: "JozkoM"
     Report:
       required: 
-        - report_id
         - user_id
         - characteristic
         - latitude
@@ -289,10 +283,6 @@ components:
         - location
         - uploadTime
       properties:
-        report_id:
-          type: "string"
-          format: "uuid"
-          example: "4ea60c91-62e5-481b-b9c5-d2bb3a3a4b2a"
         user_id:
           type: "string"
           format: "uuid"
