@@ -1,9 +1,9 @@
 create table reports
  (
-  report_id uuid DEFAULT uuid_generate_v4(),
+  report_id varchar DEFAULT uuid_generate_v4(),
    constraint reports_pk
    primary key(report_id),
-  user_id uuid
+  user_id varchar
    constraint reports_users_user_id_fk
     references users,
  characteristic varchar,
@@ -16,7 +16,7 @@ create table reports
 );
 
 CREATE TABLE users (
-    user_id uuid DEFAULT uuid_generate_v4(),
+    user_id varchar DEFAULT uuid_generate_v4(),
     email VARCHAR NOT NULL,
     password VARCHAR NOT NULL,
     username VARCHAR NOT NULL,
