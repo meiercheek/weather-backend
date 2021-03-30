@@ -138,13 +138,13 @@ paths:
     get:
         tags:
           - reports
-        summary: "searches report by owner"
-        description: "Returns a report by owner"
-        operationId: "getReportByOwner"
+        summary: "searches reports by owner"
+        description: "Returns a reports by owner"
+        operationId: "getReportsByOwner"
         parameters:
         - name: "user_id"
           in: "path"
-          description: "user ID to find his report"
+          description: "user ID to find his reports"
           required: true
           schema:
             type: "string"
@@ -154,7 +154,9 @@ paths:
             content:
               application/json:
                 schema:
-                  $ref: "#/components/schemas/Report"
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/Report"
           "400":
             description: "Invalid ID supplied"
           "404":
@@ -227,18 +229,6 @@ paths:
           description: "invalid input, object invalid"
         '401':
           description: "not authenticated"
-  /logout:
-    get:
-      tags:
-        - users
-      summary: "logs the user out"
-      operationId: "logoutUser"
-      description: "logs the user out"
-      responses:
-        '200':
-          description: "logged out"
-        '401':
-          description: "not authenticated"
   /me:
     get:
       tags:
@@ -294,7 +284,8 @@ components:
         - report_id
         - user_id
         - characteristic
-        - coordinates
+        - latitude
+        - longitude
         - location
         - uploadTime
       properties:
@@ -309,8 +300,12 @@ components:
         characteristic:
           type: "string"
           example: "Cloudy"
-        coordinates:
-          $ref: '#/components/schemas/Coordinates'
+        latitude:
+          type: "number"
+          example: 56.6874
+        longitude: 
+          type: "number"
+          example: 37.5547
         location:
           type: "string"
           example: "Bratislava"
@@ -324,18 +319,8 @@ components:
         photo:
           type: "string"
           format: "binary"
-          example:   
-    Coordinates:
-      required:
-        - lat
-        - long
-      properties:
-        lat:
-          type: "number"
-          example: 56.6874
-        long: 
-          type: "number"
-          example: 37.5547
+          example:
+        
 servers:
   # Added by API Auto Mocking Plugin
   - description: SwaggerHub API Auto Mocking
