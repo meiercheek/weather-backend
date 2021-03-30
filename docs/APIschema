@@ -256,7 +256,7 @@ components:
           example: "mrkvicka55"
         username:
           type: "string"
-          example: "JozkoM"
+          example: "jozkoM"
     User:
       required: 
         - email
@@ -270,10 +270,10 @@ components:
         password:
           type: "string"
           format: "password"
-          example: "********"
+          example: "mrkvicka55"
         username:
           type: "string"
-          example: "JozkoM"
+          example: "jozkoM"
     Report:
       required: 
         - user_id
