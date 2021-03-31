@@ -35,7 +35,12 @@ const getGeoReports = (request, response) => {
     return response.status(400).json({ "error": 'Incorrect map data entered.' })
   }
   else {
-    pool.query('TODO', [], (error, results) => {
+    pool.query('SELECT * FROM reports WHERE \
+    (latitude BETWEEN $1 AND $2) \
+    AND \
+    ($3 < $4 AND longitude BETWEEN $3 AND $4) \
+    OR (($4 < $3) AND ((longitude BETWEEN $3 AND 180) OR (longitude BETWEEN -180 AND $4)))',
+     [SWlat, NElat, SWlong, NElong], (error, results) => {
       if (error) {
         return response.status(500).json({ "error": error })
       }
