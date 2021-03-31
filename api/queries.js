@@ -213,13 +213,31 @@ const logoutUser = (request, response) => {
   return response.status(200).json({ auth: false, token: null });
 }
 
-const createUser = (request, response) => {
+
+const checkEmail = (request, response,callback) => {
   if (request.body.username == undefined ||
     request.body.email == undefined ||
     request.body.password == undefined) {
     return response.status(400).json({ "error": 'invalid object' })
   }
   const { username, email, password } = request.body
+
+  pool.query('SELECT * from users where email=$1',
+    [email], (error, results) => {
+      if (error) {
+        callback(error)
+        return response.status(500).json({ "error": error })
+      }
+      else {
+        if (results.rows.length > 0)
+          return response.status(409).json({ "error": "user with this email already exists." })
+        else
+          callback(response, username, email, password)
+      }
+    })
+}
+
+const createUser = (response, username, email, password) => {
   const hashedPass = bcrypt.hashSync(password);
 
   pool.query('INSERT INTO users (username, email, password) VALUES ($1, $2, $3) returning user_id', [username, email, hashedPass], (error, results) => {
@@ -241,6 +259,7 @@ module.exports = {
   getGeoReports,
   getUserById,
   getReportsByOwner,
+  checkEmail,
   createUser,
   createReport,
   updateReport,

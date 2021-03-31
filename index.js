@@ -21,7 +21,7 @@ app.listen(port, () => {
 })
 
 
-app.post('/users', db.createUser)
+app.post('/users', (req, res) => db.checkEmail(req, res, db.createUser))
 app.get('/users/:user_id', (req, res) =>db.auth(req, res, db.getUserById))
 
 app.post('/login', db.loginUser)
