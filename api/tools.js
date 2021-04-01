@@ -72,12 +72,43 @@ const isFloat = (n) => {
 
 }
 */
+const Pool = require('pg').Pool
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
+
+const pool = new Pool({
+  user: process.env.USER,
+  host: process.env.HOST,
+  database: process.env.NAME,
+  password: process.env.PASS,
+  port: process.env.PORT,
+})
+
  const checkuuid = (str) => {
     const regex = new RegExp(/^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/,'i')
     return regex.test(str)
 }
 
+const auth = (request, response, next) => {
+    let token = request.headers['x-access-token'];
+    if (!token)
+      return response.status(401).json({ auth: false, message: 'No token provided.' });
+  
+    jwt.verify(token, process.env.JWTSECRET, (err, decoded) => {
+      if (err)
+        return response.status(500).json({ auth: false, message: 'Failed to authenticate token.' });
+      else {
+        next(request, response)
+      }
+  
+    });
+  }
+
 module.exports = {
     //checkandcalccoords,
-    checkuuid
+    checkuuid,
+    auth,
+    jwt,
+    bcrypt,
+    pool
 }

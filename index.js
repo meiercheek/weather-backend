@@ -2,7 +2,10 @@ require('dotenv').config()
 const express = require('express')
 const app = express()
 const port = 3000
-const db = require('./api/queries')
+
+const tools = require('./api/tools')
+const users = require('./api/users')
+const reports = require('./api/reports')
 
 
 app.use(express.json())
@@ -21,17 +24,17 @@ app.listen(port, () => {
 })
 
 
-app.post('/users', (req, res) => db.checkEmail(req, res, db.createUser))
-app.get('/users/:user_id', (req, res) =>db.auth(req, res, db.getUserById))
+app.post('/users', (req, res) => users.checkEmail(req, res, users.createUser))
+app.get('/users/:user_id', (req, res) => tools.auth(req, res, users.getUserById))
 
-app.post('/login', db.loginUser)
-app.get('/logout', (req, res) => db.auth(req, res, db.logoutUser))
-app.get('/me',  db.getCurrentUserId)
+app.post('/login', users.loginUser)
+app.get('/logout', (req, res) => tools.auth(req, res, users.logoutUser))
+app.get('/me',  users.getCurrentUserId)
 
-app.post('/reports', (req, res) => db.auth(req, res, db.createReport))
-app.put('/reports/:report_id', (req, res) => db.auth(req, res, db.updateReport))
-app.get('/reports/:user_id', (req, res) => db.auth(req, res, db.getReportsByOwner))
-app.delete('/reports/:report_id', (req, res) => db.auth(req, res,db.deleteReport))
+app.post('/reports', (req, res) => tools.auth(req, res, reports.createReport))
+app.put('/reports/:report_id', (req, res) => tools.auth(req, res, reports.updateReport))
+app.get('/reports/:user_id', (req, res) => tools.auth(req, res, reports.getReportsByOwner))
+app.delete('/reports/:report_id', (req, res) => tools.auth(req, res,reports.deleteReport))
 
-app.get('/georeports',(req, res) => db.auth(req, res, db.getGeoReports))
+app.get('/georeports',(req, res) => tools.auth(req, res, reports.getGeoReports))
 

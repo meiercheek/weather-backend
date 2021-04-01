@@ -1,1 +1,0 @@
-INSERT INTO public.reports (report_id, user_id, characteristic, latitude, longitude, location, uploadtime, description, photo) VALUES ('4ad2a84d-ba26-4ead-b111-c8f1614fc6bb', 'c4632520-cc41-40dd-aac8-3939d3c2588f', 'Sunny', 48.57442, 19.15324, 'Zvolen, SK', '2021-03-24 21:14:42.580807', 'its still sunny omg', '0000');

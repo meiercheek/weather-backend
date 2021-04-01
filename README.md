@@ -3,10 +3,11 @@
 repo url: https://github.com/meiercheek/weather-backend
 
 What do you need for running the API:
-- Node.js v.10 or higher
-- postgreSQL database (import file is included)
+- Node.js v10 or higher
+- Nodemon
+- PostgreSQL database (import file is included in docs/db_imports)
 
-You need to create and store secret info in a `.env` file:
+You need to create and store secret info in a `\.env` file:
 ```
 USER= <database user>
 HOST= <ip adress of the db>
@@ -81,7 +82,8 @@ The user is in a list of his reports, he picks the `Delete report` option, so a 
     - updates the entry in the database
     - 500 if db error, 200 if success
   
- - createReport
+ - createReport and checkEmail
+    - verifies whether the email entered is not already in db, if it is -> 409
     - verifies, whether the report's body is correct, if not -> 400 response
     - inserts the entry in the database
     - 500 if db error, 200 if success
