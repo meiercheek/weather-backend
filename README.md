@@ -22,7 +22,11 @@ After that:
 
 `npm start` - start the API 
 
-Runs on nodemon, so `npm install -g nodemon`, if there is an error while starting.
+or
+
+`npm run dev` - start API with nodemon
+
+Use `npm install -g nodemon`, if there is an error while starting.
 
 ## Documentation
 ### Changes from previous submission:
